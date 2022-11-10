@@ -4,7 +4,7 @@ import Image from "~/assets/image0.jpg";
 
 const Nav = () => {
 	return (
-		<div className='flex flex-col h-full col-span-2 text-center bg-white'>
+		<div className='sticky top-0 flex flex-col w-full h-screen col-span-2 text-center bg-white '>
 			<h1 className='my-8 text-4xl font-bold'>Kofi</h1>
 
 			<div>

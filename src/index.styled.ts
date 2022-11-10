@@ -6,6 +6,8 @@ const InputBox = styled.input`
 	padding: 6px 20px;
 	color: #594545;
 
+	box-shadow: 3px 3px 3px 3px rgba(135, 133, 162, 0.25);
+
 	::placeholder {
 		font-weight: 500;
 		color: #815b5b;
@@ -17,7 +19,6 @@ const InputBox = styled.input`
 `;
 
 const Button = styled.button`
-	width: 110px;
 	padding: 12px 24px;
 	border-radius: 12px;
 	font-weight: 500;

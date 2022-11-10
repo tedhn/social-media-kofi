@@ -1,4 +1,4 @@
-import Home from "./home/Home";
-import Login from "./login/Login";
+import Card from "./card/Card";
+import Nav from "./navbar/Nav";
 
-export { Home, Login };
+export { Card, Nav };

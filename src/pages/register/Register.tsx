@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { InputBox, PrimaryButton, SecondaryButton } from "~/Components.styled";
+import { InputBox, PrimaryButton, SecondaryButton } from "~/index.styled";
 
 const Login = () => {
 	const navigate = useNavigate();
 
-	const handleLogin = () => {
+	const handleRegister = () => {
 		navigate("home");
 	};
 
@@ -15,13 +15,17 @@ const Login = () => {
 			<h1 className='text-5xl font-bold text-center'>Kofi</h1>
 
 			<div className='flex flex-col gap-4 my-6 '>
+				<InputBox type='text' placeholder='Email' />
+				<InputBox type='text' placeholder='Full Name' />
 				<InputBox type='text' placeholder='Username' />
 				<InputBox type='password' placeholder='Password' />
 			</div>
 
 			<div className='flex gap-4'>
-				<SecondaryButton>Register</SecondaryButton>
-				<PrimaryButton onClick={handleLogin}>Login</PrimaryButton>
+				<SecondaryButton onClick={() => navigate("/login")}>
+					Login
+				</SecondaryButton>
+				<PrimaryButton onClick={handleRegister}>Register</PrimaryButton>
 			</div>
 		</div>
 	);
