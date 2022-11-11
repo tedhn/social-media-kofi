@@ -5,8 +5,9 @@ const InputBox = styled.input`
 	border-radius: 12px;
 	padding: 6px 20px;
 	color: #594545;
+	font-weight: 500;
 
-	box-shadow: 3px 3px 3px 3px rgba(135, 133, 162, 0.25);
+	/* box-shadow: 3px 3px 3px 3px rgba(135, 133, 162, 0.25); */
 
 	::placeholder {
 		font-weight: 500;

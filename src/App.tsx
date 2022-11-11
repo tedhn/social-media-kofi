@@ -8,11 +8,11 @@ import { Nav } from "./components";
 import { UserContext, userContextType } from "./context/UserContext";
 
 function App() {
-	const { isLoggedIn } = useContext(UserContext) as userContextType;
+	const { jwt } = useContext(UserContext) as userContextType;
 
 	return (
-		<div className='grid grid-cols-12 bg-brown/20'>
-			{isLoggedIn && <Nav />}
+		<div className=' grid grid-cols-12 bg-brown/20'>
+			{jwt && <Nav />}
 
 			<Routes>
 				<Route path='' element={<Login />} />
@@ -24,6 +24,6 @@ function App() {
 	);
 }
 
-//TODO : handle api for login and register
+//TODO : add password validation (6 characters long)
 
 export default App;

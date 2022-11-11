@@ -60,7 +60,7 @@ const Home = () => {
 				</div>
 			</div>
 
-			<div>Feeds</div>
+			<div className='py-8 text-5xl font-bold'>Feeds</div>
 
 			<div className='flex flex-wrap gap-12 grow '>
 				<Card /> <Card /> <Card />
