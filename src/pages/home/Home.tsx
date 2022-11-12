@@ -1,8 +1,51 @@
-import React from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+
+import { getPosts, createPost, uploadImage } from "~/api";
 import { Card } from "~/components";
+import { UserContext, userContextType } from "~/context/UserContext";
 import { InputBox, PrimaryButton } from "~/index.styled";
 
+export interface PostType {
+	id: number;
+	caption: string;
+	image_id: number;
+	user_id: number;
+}
+
 const Home = () => {
+	const { jwt, user } = useContext(UserContext) as userContextType;
+
+	const [image, setImage] = useState<any>();
+	const [posts, setPosts] = useState([]);
+
+	useEffect(() => {
+		handleLoad();
+	}, []);
+
+	const handleLoad = async () => {
+		const postsData = await getPosts(jwt);
+
+		setPosts(
+			postsData.map((post: any) => {
+				return {
+					id: post.id,
+					caption: post.attributes.caption,
+					image_id: post.attributes.image_id,
+					user_id: post.attributes.user_id,
+				};
+			})
+		);
+	};
+
+	const handleCreatePost = async () => {
+		const { data } = await uploadImage(jwt, image);
+
+		createPost(jwt, "asdf", data[0].id, user.id);
+
+		// add success notification
+	};
+
 	return (
 		<div className='flex flex-col col-start-3 col-end-13 p-8 '>
 			<div className='flex justify-between '>
@@ -40,7 +83,11 @@ const Home = () => {
 						</svg>
 					</div>
 
-					<PrimaryButton className='flex items-center justify-center w-40 gap-2'>
+					<input onChange={(e) => setImage(e.target.files![0])} type='file' />
+
+					<PrimaryButton
+						className='flex items-center justify-center w-40 gap-2'
+						onClick={handleCreatePost}>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
 							fill='none'
@@ -62,9 +109,10 @@ const Home = () => {
 
 			<div className='py-8 text-5xl font-bold'>Feeds</div>
 
-			<div className='flex flex-wrap gap-12 grow '>
-				<Card /> <Card /> <Card />
-				<Card /> <Card /> <Card />
+			<div className='flex flex-wrap gap-12 '>
+				{posts.map((post: PostType) => {
+					return <Card key={post.id} post={post} />;
+				})}
 			</div>
 		</div>
 	);

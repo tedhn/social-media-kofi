@@ -24,6 +24,6 @@ function App() {
 	);
 }
 
-//TODO : add password validation (6 characters long)
+//TODO : link posts with user
 
 export default App;

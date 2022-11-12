@@ -1,10 +1,42 @@
-import React from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 import Image1 from "~/assets/image0.jpg";
 import Image2 from "~/assets/image1.jpg";
 
-const Card = () => {
+import { PostType } from "~/pages/home/Home";
+import { UserContext, userContextType } from "~/context/UserContext";
+import { getImages, getUser } from "~/api";
+
+interface PropTypes {
+	post: PostType;
+}
+
+const Card: FC<PropTypes> = ({ post }) => {
+	const { jwt } = useContext(UserContext) as userContextType;
+
+	const [data, setData] = useState<{
+		username: string;
+		image_url: string;
+		caption: string;
+	}>({ username: "", image_url: "", caption: "" });
+
+	useEffect(() => {
+		handleLoad();
+	}, []);
+
+	const handleLoad = async () => {
+		const image = await getImages(jwt, post.image_id.toString());
+		const user = await getUser(jwt, post.user_id.toString());
+
+		setData({
+			username: user.username,
+			image_url: image.url,
+			caption: post.caption,
+		});
+	};
+
 	return (
 		<StyledCard className='flex flex-col bg-white rounded-md w-72'>
 			<div className='flex items-center justify-between px-2 py-3'>
@@ -16,7 +48,7 @@ const Card = () => {
 							className='object-cover w-full h-full rounded-full'
 						/>
 					</div>
-					<div className='text-sm '>hhn</div>
+					<div className='text-sm '>{data.username}</div>
 				</div>
 
 				<svg
@@ -34,8 +66,12 @@ const Card = () => {
 				</svg>
 			</div>
 
-			<div className='w-full'>
-				<img src={Image1} alt='404' className='object-contain ' />
+			<div className='w-full h-64'>
+				<img
+					src={`http://localhost:1336${data.image_url}`}
+					alt='404'
+					className='object-cover h-full w-full'
+				/>
 			</div>
 
 			<div className='flex gap-2 px-2 py-3'>
@@ -66,7 +102,7 @@ const Card = () => {
 					/>
 				</svg>
 			</div>
-			<div className='px-2 pb-3 text-sm '>Some caption here</div>
+			<div className='px-2 pb-3 text-sm '>{data.caption}</div>
 		</StyledCard>
 	);
 };

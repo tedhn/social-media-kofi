@@ -37,19 +37,17 @@ const Login = () => {
 					}
 				);
 
-				const config = {
-					headers: {
-						Authorization: `Bearer ${res.data.jwt}`,
-					},
-				};
-
 				// updating strapi user account to include fullname
 				await axios.put(
 					`http://localhost:1336/api/users/${res.data.user.id}`,
 					{
 						fullname: user.fullname,
 					},
-					config
+					{
+						headers: {
+							Authorization: `Bearer ${res.data.jwt}`,
+						},
+					}
 				);
 
 				updateJWT(res.data.jwt);

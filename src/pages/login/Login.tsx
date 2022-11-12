@@ -8,7 +8,7 @@ import { UserContext, userContextType } from "~/context/UserContext";
 const Login = () => {
 	const navigate = useNavigate();
 
-	const { updateJWT } = useContext(UserContext) as userContextType;
+	const { updateJWT, updateUser } = useContext(UserContext) as userContextType;
 
 	const [loginInfo, setLoginInfo] = useState({ email: "", password: "" });
 
@@ -19,7 +19,10 @@ const Login = () => {
 				password: loginInfo.password,
 			});
 
+			console.log(res.data.user);
+
 			updateJWT(res.data.jwt);
+			updateUser(res.data.user);
 
 			navigate("/home");
 		} catch (e) {
