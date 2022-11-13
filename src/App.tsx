@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Home, Login, Register } from "./pages";
 import { Nav } from "./components";
 import { UserContext, userContextType } from "./context/UserContext";
+import Modal from "./components/modal/Modal";
 
 function App() {
 	const { jwt } = useContext(UserContext) as userContextType;
@@ -23,7 +24,5 @@ function App() {
 		</div>
 	);
 }
-
-//TODO : link posts with user
 
 export default App;

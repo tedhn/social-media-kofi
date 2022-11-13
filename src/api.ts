@@ -74,3 +74,25 @@ export const uploadImage = async (jwt: string, image: File) => {
 		return e;
 	}
 };
+
+export const updateUserImage = async (
+	jwt: string,
+	image_id: number,
+	user_id: number
+) => {
+	try {
+		await axios.put(
+			`http://localhost:1336/api/users/${user_id}`,
+			{
+				user_image_id: image_id,
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+				},
+			}
+		);
+	} catch (e: any) {
+		return e;
+	}
+};

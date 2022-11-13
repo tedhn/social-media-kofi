@@ -15,7 +15,7 @@ interface UserType {
 const Login = () => {
 	const navigate = useNavigate();
 
-	const { updateJWT } = useContext(UserContext) as userContextType;
+	const { updateJWT, updateUser } = useContext(UserContext) as userContextType;
 
 	const [user, setUser] = useState<UserType>({
 		email: "",
@@ -42,6 +42,7 @@ const Login = () => {
 					`http://localhost:1336/api/users/${res.data.user.id}`,
 					{
 						fullname: user.fullname,
+						user_image_id: 21,
 					},
 					{
 						headers: {
@@ -50,7 +51,17 @@ const Login = () => {
 					}
 				);
 
+				const userData = await axios.get(
+					`http://localhost:1336/api/users/${res.data.user.id}`,
+					{
+						headers: {
+							Authorization: `Bearer ${res.data.jwt}`,
+						},
+					}
+				);
+
 				updateJWT(res.data.jwt);
+				updateUser(userData.data);
 				navigate("/home");
 			} catch (e) {
 				// change this to toast notification
@@ -81,28 +92,40 @@ const Login = () => {
 		<div className='flex flex-col items-center justify-center h-screen col-start-5 col-end-9 gap-4'>
 			<h1 className='text-5xl font-bold text-center'>Kofi</h1>
 
-			<div className='flex flex-col gap-4 my-6 '>
+			<form className='flex flex-col gap-4 my-6 '>
 				<InputBox
+					autoComplete='on'
 					type='text'
 					placeholder='Email'
-					onChange={(e) => handleInputChange("email", e.target.value)}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+						handleInputChange("email", e.target.value)
+					}
 				/>
 				<InputBox
+					autoComplete='on'
 					type='text'
 					placeholder='Full Name'
-					onChange={(e) => handleInputChange("fullname", e.target.value)}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+						handleInputChange("fullname", e.target.value)
+					}
 				/>
 				<InputBox
+					autoComplete='on'
 					type='text'
 					placeholder='Username'
-					onChange={(e) => handleInputChange("username", e.target.value)}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+						handleInputChange("username", e.target.value)
+					}
 				/>
 				<InputBox
+					autoComplete='on'
 					type='password'
 					placeholder='Password'
-					onChange={(e) => handleInputChange("password", e.target.value)}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+						handleInputChange("password", e.target.value)
+					}
 				/>
-			</div>
+			</form>
 
 			<div className='flex gap-4'>
 				<SecondaryButton onClick={() => navigate("/login")}>

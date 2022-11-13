@@ -19,8 +19,6 @@ const Login = () => {
 				password: loginInfo.password,
 			});
 
-			console.log(res.data.user);
-
 			updateJWT(res.data.jwt);
 			updateUser(res.data.user);
 

@@ -25,7 +25,6 @@ const UserContextProvider: FC<propTypes> = ({ children }) => {
 	};
 
 	const updateUser = (user: any) => {
-		console.log(user);
 
 		setUser(user);
 	};

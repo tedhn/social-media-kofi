@@ -1,13 +1,18 @@
-import React, { useContext } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Image from "~/assets/image0.jpg";
+import { getImages, updateUserImage } from "~/api";
 import { UserContext, userContextType } from "~/context/UserContext";
+import { InputBox, PrimaryButton, SecondaryButton } from "~/index.styled";
+import Modal from "../modal/Modal";
 
 const Nav = () => {
 	const navigate = useNavigate();
 
-	const { updateJWT } = useContext(UserContext) as userContextType;
+	const { jwt, updateJWT, user, updateUser } = useContext(
+		UserContext
+	) as userContextType;
 
 	const handleLogout = () => {
 		updateJWT("");
@@ -15,23 +20,94 @@ const Nav = () => {
 		navigate("/");
 	};
 
+	const [isShowModal, setShowModal] = useState<boolean>(false);
+
+	const closeModal = (value: boolean) => {
+		setShowModal(value);
+	};
+
+	useEffect(() => {
+		handleLoad();
+	}, []);
+
+	const handleLoad = async () => {
+		const image = await getImages(jwt, user.user_image_id.toString());
+
+		updateUser({ ...user, imageUrl: image.url });
+	};
+
 	return (
 		<div className='sticky top-0 flex flex-col w-full h-screen col-span-2 text-center bg-white '>
+			{isShowModal && (
+				<Modal
+					closeModal={closeModal}
+					render={(
+						image,
+						caption,
+						setImage,
+						setCaption,
+						handleCreatePost,
+						handleUpdateUserImage
+					) => {
+						return (
+							<>
+								<div className='font-bold text-3xl'>
+									Update your Profile Picture
+								</div>
+								{image ? (
+									<>
+										<div>
+											<img
+												src={URL.createObjectURL(image)}
+												alt=''
+												className='max-w-xs'
+												onClick={() => setImage(undefined)}
+											/>
+										</div>
+									</>
+								) : (
+									<>
+										<InputBox
+											onChange={(e) => setImage(e.target.files![0])}
+											type='file'
+										/>
+									</>
+								)}
+
+								<div className='flex gap-4'>
+									<SecondaryButton onClick={() => closeModal(false)}>
+										Cancel
+									</SecondaryButton>
+									<PrimaryButton onClick={handleUpdateUserImage}>
+										Update
+									</PrimaryButton>
+								</div>
+							</>
+						);
+					}}
+				/>
+			)}
+
 			<h1 className='my-8 text-4xl font-bold'>Kofi</h1>
 
-			<div>
-				<div className='w-24 h-24 mx-auto mb-4'>
+			<div className='mb-8'>
+				<div
+					className='w-24 h-24 relative mx-auto mb-4 cursor-pointer text-transparent hover:brightness-75 hover:text-white'
+					onClick={() => closeModal(true)}>
+					<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+						Change
+					</div>
 					<img
-						src={Image}
+						src={`http://localhost:1336${user.imageUrl}`}
 						alt='404'
 						className='object-cover w-full h-full rounded-full'
 					/>
 				</div>
 
-				<h2 className='text-xl font-medium'>Heinhtet Naing</h2>
-				<h3 className='font-bold text-lightBrown'>@hhn</h3>
+				<h2 className='text-xl font-medium'>{user.fullname}</h2>
+				<h3 className='font-bold text-lightBrown'>@{user.username}</h3>
 			</div>
-
+			{/* 
 			<div className='flex justify-center gap-1 mt-4 mb-8 text-xs font-bold text-center'>
 				<div className='w-1/4'>
 					<p>10</p>
@@ -45,7 +121,7 @@ const Nav = () => {
 					<p>10</p>
 					<p>Following</p>
 				</div>
-			</div>
+			</div> */}
 
 			<ul className='flex flex-col items-center gap-6 font-bold place-self-center grow '>
 				<li className='flex gap-2 px-4 py-2 rounded-md hover:cursor-pointer hover:bg-brown hover:text-white'>
