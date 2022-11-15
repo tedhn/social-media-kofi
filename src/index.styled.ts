@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const InputBox = styled.input`
+export const InputBox = styled.input`
 	background: white;
 	border-radius: 12px;
 	padding: 6px 20px;
@@ -19,7 +19,7 @@ const InputBox = styled.input`
 	}
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
 	padding: 12px 24px;
 	border-radius: 12px;
 	font-weight: 500;
@@ -31,14 +31,20 @@ const Button = styled.button`
 	}
 `;
 
-const SecondaryButton = styled(Button)`
+export const SecondaryButton = styled(Button)`
 	color: #815b5b;
 	background-color: #fff;
 `;
 
-const PrimaryButton = styled(Button)`
+export const PrimaryButton = styled(Button)`
 	color: white;
 	background-color: #815b5b;
 `;
 
-export { InputBox, PrimaryButton, SecondaryButton, Button };
+export const PageContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	grid-column-start: 3;
+	grid-column-end: 13;
+	padding: 2rem;
+`;

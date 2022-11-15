@@ -1,11 +1,16 @@
 import axios from "axios";
 import React, { FC, useContext, useEffect, useState } from "react";
 
-import { getPosts, createPost, uploadImage } from "~/api";
+import { getPosts } from "~/api";
 import { Card } from "~/components";
 import Modal from "~/components/modal/Modal";
 import { UserContext, userContextType } from "~/context/UserContext";
-import { InputBox, PrimaryButton, SecondaryButton } from "~/index.styled";
+import {
+	InputBox,
+	PageContainer,
+	PrimaryButton,
+	SecondaryButton,
+} from "~/index.styled";
 
 export interface PostType {
 	id: number;
@@ -33,7 +38,7 @@ const Home = () => {
 		const postsData = await getPosts(jwt);
 
 		setPosts(
-			postsData.map((post: any) => {
+			postsData.data.map((post: any) => {
 				return {
 					id: post.id,
 					caption: post.attributes.caption,
@@ -45,7 +50,7 @@ const Home = () => {
 	};
 
 	return (
-		<div className='flex flex-col col-start-3 col-end-13 p-8 overflow-hidden'>
+		<PageContainer>
 			{isShowModal && (
 				<Modal
 					closeModal={closeModal}
@@ -100,9 +105,9 @@ const Home = () => {
 			)}
 
 			<div className='flex justify-between '>
-				<InputBox type='text' placeholder='Search' />
+				<div className='pb-8 text-4xl font-bold'>Feeds</div>
 
-				<div className='flex items-center gap-4'>
+				<div className='flex items-center gap-4 self-start'>
 					{/* <div>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
@@ -156,14 +161,12 @@ const Home = () => {
 				</div>
 			</div>
 
-			<div className='py-8 text-5xl font-bold'>Feeds</div>
-
 			<div className='flex flex-wrap gap-12 justify-evenly '>
 				{posts.map((post: PostType) => {
 					return <Card key={post.id} post={post} />;
 				})}
 			</div>
-		</div>
+		</PageContainer>
 	);
 };
 

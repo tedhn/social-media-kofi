@@ -1,21 +1,20 @@
 import React, { FC, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
-
-import Image1 from "~/assets/image0.jpg";
-import Image2 from "~/assets/image1.jpg";
 
 import { PostType } from "~/pages/home/Home";
 import { UserContext, userContextType } from "~/context/UserContext";
 import { getImages, getUser } from "~/api";
 import Heart from "../heart/Heart";
+import { useNavigate } from "react-router-dom";
 
 interface PropTypes {
 	post: PostType;
 }
 
 const Card: FC<PropTypes> = ({ post }) => {
-	const { jwt } = useContext(UserContext) as userContextType;
+	const navigate = useNavigate();
+
+	const { jwt, user } = useContext(UserContext) as userContextType;
 
 	const [data, setData] = useState<{
 		username: string;
@@ -71,16 +70,18 @@ const Card: FC<PropTypes> = ({ post }) => {
 				</svg>
 			</div>
 
-			<div className='w-full h-64'>
-				<img
+			<div
+				className='w-full h-64 overflow-hidden'
+				onClick={() => navigate(`/posts/${post.id}`)}>
+				<Image
 					src={`http://localhost:1336${data.image_url}`}
 					alt='404'
-					className='object-cover h-full w-full'
+					className='object-cover h-full w-full '
 				/>
 			</div>
 
 			<div className='flex gap-2 px-2 py-3'>
-				<Heart />
+				<Heart postId={post.id} userId={user.id} />
 				{/* <svg
 					xmlns='http://www.w3.org/2000/svg'
 					fill='none'
@@ -104,11 +105,23 @@ const StyledCard = styled.div`
 	border-radius: 12px;
 	font-weight: 500;
 	box-shadow: 3px 3px 3px 3px rgba(135, 133, 162, 0.25);
-	/* transition: transform 0.3s ease;
+	/* transition: transform 0.3s ease; */
 
 	:hover {
-		transform: translateY(-2px);
-	} */
+		/* transform: translateY(-2px); */
+		/* cursor: pointer; */
+	}
+`;
+
+const Image = styled.img`
+	-webkit-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+
+	:hover {
+		-webkit-transform: scale3d(1.2, 1.2, 1);
+		transform: scale3d(1.2, 1.2, 1);
+		cursor: pointer;
+	}
 `;
 
 export default Card;

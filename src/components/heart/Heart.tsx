@@ -1,10 +1,38 @@
-import React, { useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 
-const Heart = () => {
+import { addToFavourite, getFavouriteId, removeFromFavourite } from "~/api";
+import { UserContext, userContextType } from "~/context/UserContext";
+interface PropTypes {
+	postId: number;
+	userId: number;
+}
+
+const Heart: FC<PropTypes> = ({ postId, userId }) => {
 	const [isLiked, setLiked] = useState(false);
 
-	const handleClick = () => {
+	const { jwt } = useContext(UserContext) as userContextType;
+
+	useEffect(() => {
+		handleLoad();
+	}, []);
+
+	const handleLoad = async () => {
+		const res = await getFavouriteId(jwt, postId, userId);
+
+		if (res[0]) {
+			setLiked(true);
+		}
+	};
+
+	const handleClick = async () => {
 		setLiked(!isLiked);
+
+		if (isLiked) {
+			const res = await getFavouriteId(jwt, postId, userId);
+			await removeFromFavourite(jwt, res[0].id);
+		} else {
+			await addToFavourite(jwt, postId, userId);
+		}
 	};
 
 	return (

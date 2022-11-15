@@ -30,7 +30,7 @@ export const getPosts = async (jwt: string, id: string = "") => {
 		},
 	});
 
-	return data.data;
+	return data;
 };
 
 export const createPost = async (
@@ -73,6 +73,67 @@ export const uploadImage = async (jwt: string, image: File) => {
 	} catch (e: any) {
 		return e;
 	}
+};
+
+export const addToFavourite = async (
+	jwt: string,
+	postId: number,
+	userId: number
+) => {
+	const res = await axios.post(
+		"http://localhost:1336/api/favourites",
+		{
+			data: { post_id: postId, user_id: userId, user: userId },
+		},
+		{
+			headers: {
+				Authorization: `Bearer ${jwt}`,
+			},
+		}
+	);
+
+	return res.data;
+};
+export const removeFromFavourite = async (jwt: string, id: number) => {
+	axios.delete(`http://localhost:1336/api/favourites/${id}`, {
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	});
+};
+
+export const getFavouriteId = async (
+	jwt: string,
+	postId: number,
+	userId: number
+) => {
+	const { data } = await axios.get("http://localhost:1336/api/favourites", {
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	});
+
+	return data.data.filter((item: any) => {
+		if (
+			item.attributes.post_id === postId &&
+			item.attributes.user_id === userId
+		) {
+			return item.id;
+		}
+	});
+};
+
+export const findUserFavourites = async (jwt: string, userId: number) => {
+	const { data } = await axios.get(
+		`http://localhost:1336/api/favourites?filters[user_id][$eq]=${userId}`,
+		{
+			headers: {
+				Authorization: `Bearer ${jwt}`,
+			},
+		}
+	);
+
+	return data.data;
 };
 
 export const updateUserImage = async (
