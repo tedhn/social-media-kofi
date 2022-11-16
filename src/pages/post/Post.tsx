@@ -52,7 +52,11 @@ const Post = () => {
 	};
 
 	return (
-		<PageContainer>
+		<PageContainer
+			initial={{ opacity: 0, y: -50 }}
+			animate={{ opacity: 1, y: 0 }}
+			exit={{ opacity: 0, y: -50 }}
+			transition={{ duration: 0.3 }}>
 			<div
 				className='mb-4 text-4xl font-bold cursor-pointer'
 				onClick={() => navigate(-1)}>

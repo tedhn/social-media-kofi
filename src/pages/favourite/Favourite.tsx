@@ -38,7 +38,11 @@ const Favourite = () => {
 	};
 
 	return (
-		<PageContainer>
+		<PageContainer
+			initial={{ opacity: 0, y: -50 }}
+			animate={{ opacity: 1, y: 0 }}
+			exit={{ opacity: 0, y: -50 }}
+			transition={{ duration: 0.3 }}>
 			<div className='pb-8 text-4xl font-bold'>Favourites</div>
 			<div className='flex flex-wrap gap-12 justify-evenly '>
 				{posts.map((post: responseType) => (

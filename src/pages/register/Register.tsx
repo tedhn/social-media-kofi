@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import Image from "~/assets/login.gif";
 import { InputBox, PrimaryButton, SecondaryButton } from "~/index.styled";
 import { UserContext, userContextType } from "~/context/UserContext";
 
@@ -90,6 +91,7 @@ const Login = () => {
 
 	return (
 		<div className='flex flex-col items-center justify-center h-screen col-start-5 col-end-9 gap-4'>
+			<img src={Image} alt='404' className='w-44' />
 			<h1 className='text-5xl font-bold text-center'>Kofi</h1>
 
 			<form className='flex flex-col gap-4 my-6 '>

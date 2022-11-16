@@ -1,5 +1,6 @@
 import React, { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { getImages } from "~/api";
 import { UserContext, userContextType } from "~/context/UserContext";
@@ -36,7 +37,12 @@ const Nav = () => {
 		updateUser({ ...user, imageUrl: image.url });
 	};
 	return (
-		<div className='sticky top-0 flex h-screen col-span-2 w-full'>
+		<motion.div
+			initial={{ opacity: 0, x: -300 }}
+			animate={{ opacity: 1, x: 0 }}
+			exit={{ opacity: 0, x: -300 }}
+			transition={{ duration: 0.3 }}
+			className='sticky top-0 flex h-screen col-span-2 w-full z-10'>
 			<div className='flex flex-col  text-center bg-white w-full '>
 				{isShowModal && (
 					<Modal
@@ -109,21 +115,6 @@ const Nav = () => {
 					<h2 className='text-xl font-medium'>{user.fullname}</h2>
 					<h3 className='font-bold text-lightBrown'>@{user.username}</h3>
 				</div>
-				{/* 
-			<div className='flex justify-center gap-1 mt-4 mb-8 text-xs font-bold text-center'>
-				<div className='w-1/4'>
-					<p>10</p>
-					<p>Posts</p>
-				</div>
-				<div className='w-1/4'>
-					<p>10</p>
-					<p>Followers</p>
-				</div>
-				<div className='w-1/4'>
-					<p>10</p>
-					<p>Following</p>
-				</div>
-			</div> */}
 
 				<ul className='flex flex-col items-center gap-6 font-bold place-self-center grow '>
 					<li
@@ -142,7 +133,7 @@ const Nav = () => {
 								d='M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25'
 							/>
 						</svg>
-						<div className='w-16 text-left '>Feeds</div>
+						<div className='w-20 text-left '>Feeds</div>
 					</li>
 					<li
 						className='flex gap-2 px-4 py-2 rounded-md hover:cursor-pointer hover:bg-brown hover:text-white'
@@ -161,7 +152,7 @@ const Nav = () => {
 							/>
 						</svg>
 
-						<div className='w-16 text-left '>Explore</div>
+						<div className='w-20 text-left '>Explore</div>
 					</li>
 					<li
 						className='flex gap-2 px-4 py-2 rounded-md hover:cursor-pointer hover:bg-brown hover:text-white'
@@ -180,7 +171,26 @@ const Nav = () => {
 							/>
 						</svg>
 
-						<div className='w-16 text-left '>Favourite</div>
+						<div className='w-20 text-left '>Favourite</div>
+					</li>
+					<li
+						className='flex gap-2 px-4 py-2 rounded-md hover:cursor-pointer hover:bg-brown hover:text-white'
+						onClick={() => navigate("/me")}>
+						<svg
+							xmlns='http://www.w3.org/2000/svg'
+							fill='none'
+							viewBox='0 0 24 24'
+							strokeWidth={1.5}
+							stroke='currentColor'
+							className='w-6 h-6'>
+							<path
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								d='M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z'
+							/>
+						</svg>
+
+						<div className='w-20 text-left '>My Posts</div>
 					</li>
 					<li className='flex gap-2 px-4 py-2 rounded-md hover:cursor-pointer hover:bg-brown hover:text-white'>
 						<svg
@@ -202,7 +212,7 @@ const Nav = () => {
 							/>
 						</svg>
 
-						<div className='w-16 text-left '>Setting</div>
+						<div className='w-20 text-left '>Setting</div>
 					</li>
 				</ul>
 
@@ -220,12 +230,12 @@ const Nav = () => {
 							d='M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9'
 						/>
 					</svg>
-					<div className='w-16 text-left ' onClick={handleLogout}>
+					<div className='w-20 text-left ' onClick={handleLogout}>
 						Log Out
 					</div>
 				</button>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

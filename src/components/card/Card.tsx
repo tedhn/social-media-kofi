@@ -1,5 +1,6 @@
 import React, { FC, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
 import { PostType } from "~/pages/home/Home";
 import { UserContext, userContextType } from "~/context/UserContext";
@@ -87,7 +88,7 @@ const Card: FC<PropTypes> = ({ post }) => {
 	);
 };
 
-const StyledCard = styled.div`
+const StyledCard = styled(motion.div)`
 	border-radius: 12px;
 	font-weight: 500;
 	box-shadow: 3px 3px 3px 3px rgba(135, 133, 162, 0.25);

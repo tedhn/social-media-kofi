@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, redirect } from "react-router-dom";
 import { searchPost } from "~/api";
 import { Card } from "~/components";
 import { UserContext, userContextType } from "~/context/UserContext";
@@ -7,6 +7,7 @@ import { InputBox, PageContainer } from "~/index.styled";
 import { responseType } from "../favourite/Favourite";
 
 const Search = () => {
+	const location = useLocation();
 	const navigate = useNavigate();
 	const { jwt } = useContext(UserContext) as userContextType;
 
@@ -24,13 +25,18 @@ const Search = () => {
 	}, [query]);
 
 	useEffect(() => {
+		console.log(location);
 		if (jwt === "") {
 			navigate("/");
 		}
 	}, []);
 
 	return (
-		<PageContainer>
+		<PageContainer
+			initial={{ opacity: 0, y: -50 }}
+			animate={{ opacity: 1, y: 0 }}
+			exit={{ opacity: 0, y: -50 }}
+			transition={{ duration: 0.3 }}>
 			<InputBox
 				type='text'
 				className='mb-8'

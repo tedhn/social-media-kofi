@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
 export const InputBox = styled.input`
 	background: white;
@@ -41,7 +42,7 @@ export const PrimaryButton = styled(Button)`
 	background-color: #815b5b;
 `;
 
-export const PageContainer = styled.div`
+export const PageContainer = styled(motion.div)`
 	display: flex;
 	flex-direction: column;
 	grid-column-start: 3;
