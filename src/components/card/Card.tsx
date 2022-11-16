@@ -43,7 +43,7 @@ const Card: FC<PropTypes> = ({ post }) => {
 
 	return (
 		<StyledCard className='flex flex-col bg-white rounded-md w-72'>
-			<div className='flex items-center justify-between px-2 py-3'>
+			<div className='px-2 py-3'>
 				<div className='flex items-center gap-1'>
 					<div className='w-8 h-8'>
 						<img
@@ -54,20 +54,6 @@ const Card: FC<PropTypes> = ({ post }) => {
 					</div>
 					<div className='text-sm '>{data.username}</div>
 				</div>
-
-				<svg
-					xmlns='http://www.w3.org/2000/svg'
-					fill='none'
-					viewBox='0 0 24 24'
-					strokeWidth={1.5}
-					stroke='currentColor'
-					className='w-6 h-6 hover:cursor-pointer'>
-					<path
-						strokeLinecap='round'
-						strokeLinejoin='round'
-						d='M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
-					/>
-				</svg>
 			</div>
 
 			<div

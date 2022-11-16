@@ -35,10 +35,8 @@ function App() {
 // TODO LOADING
 // TODO Search functionality
 // TODO Profile Page
-// TODO Post Page
 // TODO Search Page
 // TODO Animation
-// TODO Favourite FUnctionality
 // TODO Nav Bar Collaspe
 
 export default App;

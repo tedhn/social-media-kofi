@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useId, useState } from "react";
 
 import { addToFavourite, getFavouriteId, removeFromFavourite } from "~/api";
 import { UserContext, userContextType } from "~/context/UserContext";
@@ -19,7 +19,7 @@ const Heart: FC<PropTypes> = ({ postId, userId }) => {
 	const handleLoad = async () => {
 		const res = await getFavouriteId(jwt, postId, userId);
 
-		if (res[0]) {
+		if (res[0] !== undefined) {
 			setLiked(true);
 		}
 	};

@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { InputBox, PageContainer } from "~/index.styled";
 
 const Search = () => {
+	const [query, setQuery] = useState("");
+	// useEffect(() => {
+	// 	const debounce = window.addEventListener("keypress", () => {});
+
+	// 	return () => {
+	// 		second;
+	// 	};
+	// }, [third]);
+
 	return (
 		<PageContainer>
 			<InputBox type='text' placeholder='Search' />

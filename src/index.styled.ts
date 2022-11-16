@@ -48,3 +48,7 @@ export const PageContainer = styled.div`
 	grid-column-end: 13;
 	padding: 2rem;
 `;
+
+export const ShadowDiv = styled.div`
+	box-shadow: 3px 3px 3px 3px rgba(135, 133, 162, 0.25);
+`;
