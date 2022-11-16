@@ -1,5 +1,5 @@
-import axios from "axios";
 import React, { FC, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { getPosts } from "~/api";
 import { Card } from "~/components";
@@ -20,7 +20,9 @@ export interface PostType {
 }
 
 const Home = () => {
-	const { jwt, user } = useContext(UserContext) as userContextType;
+	const navigate = useNavigate();
+
+	const { jwt } = useContext(UserContext) as userContextType;
 
 	const [posts, setPosts] = useState([]);
 
@@ -31,7 +33,11 @@ const Home = () => {
 	};
 
 	useEffect(() => {
-		handleLoad();
+		if (jwt !== "") {
+			handleLoad();
+		} else {
+			navigate("/");
+		}
 	}, []);
 
 	const handleLoad = async () => {
@@ -108,37 +114,6 @@ const Home = () => {
 				<div className='pb-8 text-4xl font-bold'>Feeds</div>
 
 				<div className='flex items-center gap-4 self-start'>
-					{/* <div>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							fill='none'
-							viewBox='0 0 24 24'
-							strokeWidth={1.5}
-							stroke='currentColor'
-							className='w-6 h-6'>
-							<path
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								d='M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z'
-							/>
-						</svg>
-					</div>
-					<div>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							fill='none'
-							viewBox='0 0 24 24'
-							strokeWidth={1.5}
-							stroke='currentColor'
-							className='w-6 h-6'>
-							<path
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								d='M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0'
-							/>
-						</svg>
-					</div> */}
-
 					<PrimaryButton
 						className='flex items-center justify-center w-40 gap-2'
 						onClick={() => closeModal(true)}>

@@ -21,7 +21,11 @@ const Post = () => {
 	}>({ id: null, username: "", userImageUrl: "", image_url: "", caption: "" });
 
 	useEffect(() => {
-		handleLoad();
+		if (jwt !== "") {
+			handleLoad();
+		} else {
+			navigate("/");
+		}
 	}, []);
 
 	const handleLoad = async () => {
@@ -50,7 +54,7 @@ const Post = () => {
 	return (
 		<PageContainer>
 			<div
-				className='pb-4 text-4xl font-bold cursor-pointer'
+				className='mb-4 text-4xl font-bold cursor-pointer'
 				onClick={() => navigate(-1)}>
 				Back
 			</div>

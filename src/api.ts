@@ -157,3 +157,15 @@ export const updateUserImage = async (
 		return e;
 	}
 };
+
+export const searchPost = async (jwt: string, query: string) => {
+	const { data } = await axios.get(
+		`http://localhost:1336/api/posts?filters[caption][$containsi]=${query}`,
+		{
+			headers: {
+				Authorization: `Bearer ${jwt}`,
+			},
+		}
+	);
+	return data.data;
+};

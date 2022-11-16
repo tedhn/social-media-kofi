@@ -1,21 +1,27 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { findUserFavourites, getPosts } from "~/api";
 import { Card } from "~/components";
 import { UserContext, userContextType } from "~/context/UserContext";
 import { PageContainer } from "~/index.styled";
 import { PostType } from "../home/Home";
 
-interface responseType {
+export interface responseType {
 	attributes: PostType;
 	id: number;
 }
 
 const Favourite = () => {
+	const navigate = useNavigate();
 	const { jwt, user } = useContext(UserContext) as userContextType;
 	const [posts, setPosts] = useState<Array<responseType>>([]);
 
 	useEffect(() => {
-		handleLoad();
+		if (jwt !== "") {
+			handleLoad();
+		} else {
+			navigate("/");
+		}
 	}, []);
 
 	const handleLoad = async () => {
