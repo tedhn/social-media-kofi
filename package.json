@@ -2,6 +2,7 @@
 	"name": "social-media-kofi",
 	"private": true,
 	"version": "0.0.0",
+	"homepage": "/social-media-kofi/#",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
