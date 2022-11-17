@@ -1,14 +1,13 @@
-import React, { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
-import { PostType } from "~/pages/home/Home";
+import { PostType } from "~/index.types";
 import { UserContext, userContextType } from "~/context/UserContext";
 import { getImages, getUser } from "~/api";
-import Heart from "../heart/Heart";
-import { useNavigate } from "react-router-dom";
 import { LoadingDiv } from "~/index.styled";
-import Dropdown from "../dropdown/Dropdown";
+import { Dropdown, Heart } from "~/components";
 
 interface PropTypes {
 	post: PostType;
@@ -19,7 +18,9 @@ interface PropTypes {
 const Card: FC<PropTypes> = ({ post, isMe = false, handleDelete }) => {
 	const navigate = useNavigate();
 
-	const { jwt, user } = useContext(UserContext) as userContextType;
+	const { jwt, user, updateNotification } = useContext(
+		UserContext
+	) as userContextType;
 
 	const [data, setData] = useState<{
 		username: string;
@@ -35,20 +36,24 @@ const Card: FC<PropTypes> = ({ post, isMe = false, handleDelete }) => {
 	}, []);
 
 	const handleLoad = async () => {
-		const [postImage, user] = await Promise.all([
-			getImages(jwt, post.image_id.toString()),
-			getUser(jwt, post.user_id.toString()),
-		]);
+		try {
+			const [postImage, user] = await Promise.all([
+				getImages(jwt, post.image_id.toString()),
+				getUser(jwt, post.user_id.toString()),
+			]);
 
-		const userImage = await getImages(jwt, user.user_image_id.toString());
+			const userImage = await getImages(jwt, user.user_image_id.toString());
 
-		setData({
-			username: user.username,
-			userImageUrl: userImage.url,
-			image_url: postImage.url,
-			caption: post.caption,
-		});
-		setLoading(false);
+			setData({
+				username: user.username,
+				userImageUrl: userImage.url,
+				image_url: postImage.url,
+				caption: post.caption,
+			});
+			setLoading(false);
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 
 	return (
@@ -96,12 +101,6 @@ const StyledCard = styled(motion.div)`
 	border-radius: 12px;
 	font-weight: 500;
 	box-shadow: 3px 3px 3px 3px rgba(135, 133, 162, 0.25);
-	/* transition: transform 0.3s ease; */
-
-	:hover {
-		/* transform: translateY(-2px); */
-		/* cursor: pointer; */
-	}
 `;
 
 const Image = styled.img`

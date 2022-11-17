@@ -64,8 +64,9 @@ export const LoadingDiv = styled.div`
 
 export const NotificationDiv = styled.div`
 	position: absolute;
+	z-index: 40;
 	border-radius: 12px;
-	width: 300px;
+	width: 350px;
 	bottom: 2%;
 	right: 2%;
 	padding: 1rem 2rem;

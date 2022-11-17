@@ -10,7 +10,9 @@ const Post = () => {
 	const navigate = useNavigate();
 	const params = useParams();
 
-	const { jwt, user } = useContext(UserContext) as userContextType;
+	const { jwt, user, updateNotification } = useContext(
+		UserContext
+	) as userContextType;
 	const [post, setPost] = useState<{
 		id: number;
 		user_id: number;
@@ -36,32 +38,41 @@ const Post = () => {
 	}, []);
 
 	const handleLoad = async () => {
-		const postData = await getSpecificPost(jwt, params.id);
+		try {
+			const postData = await getSpecificPost(jwt, params.id);
 
-		const postImage = await getImages(
-			jwt,
-			postData.data.attributes.image_id.toString()
-		);
-		const userData = await getUser(
-			jwt,
-			postData.data.attributes.user_id.toString()
-		);
+			const postImage = await getImages(
+				jwt,
+				postData.data.attributes.image_id.toString()
+			);
+			const userData = await getUser(
+				jwt,
+				postData.data.attributes.user_id.toString()
+			);
 
-		const userImage = await getImages(jwt, userData.user_image_id.toString());
+			const userImage = await getImages(jwt, userData.user_image_id.toString());
 
-		setPost({
-			id: postData.data.id,
-			user_id: userData.id,
-			username: userData.username,
-			userImageUrl: userImage.url,
-			image_url: postImage.url,
-			caption: postData.data.attributes.caption,
-		});
+			setPost({
+				id: postData.data.id,
+				user_id: userData.id,
+				username: userData.username,
+				userImageUrl: userImage.url,
+				image_url: postImage.url,
+				caption: postData.data.attributes.caption,
+			});
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 
 	const handleDelete = async (id: number) => {
-		await deletePost(jwt, id);
-		navigate("/home");
+		try {
+			await deletePost(jwt, id);
+			updateNotification("Post deleted!", "#B3FFAE");
+			navigate("/home");
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 
 	return (
@@ -73,7 +84,19 @@ const Post = () => {
 			<div
 				className='mb-4 text-4xl font-bold cursor-pointer'
 				onClick={() => navigate(-1)}>
-				Back
+				<svg
+					xmlns='http://www.w3.org/2000/svg'
+					fill='none'
+					viewBox='0 0 24 24'
+					strokeWidth={1.5}
+					stroke='currentColor'
+					className='w-6 h-6'>
+					<path
+						strokeLinecap='round'
+						strokeLinejoin='round'
+						d='M15.75 19.5L8.25 12l7.5-7.5'
+					/>
+				</svg>
 			</div>
 
 			<div className='w-1/2 mx-auto'>

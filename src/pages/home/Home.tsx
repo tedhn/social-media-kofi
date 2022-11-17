@@ -1,5 +1,5 @@
-import React, { FC, useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import  {  useContext, useEffect, useState } from "react";
+import {  useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -14,18 +14,14 @@ import {
 	PrimaryButton,
 	SecondaryButton,
 } from "~/index.styled";
-
-export interface PostType {
-	id: number;
-	caption: string;
-	image_id: number;
-	user_id: number;
-}
+import { PostType } from "~/index.types";
 
 const Home = () => {
 	const navigate = useNavigate();
 
-	const { jwt } = useContext(UserContext) as userContextType;
+	const { jwt, updateNotification } = useContext(
+		UserContext
+	) as userContextType;
 
 	const [posts, setPosts] = useState<any>([]);
 	const [isLoading, setLoading] = useState(true);
@@ -45,36 +41,44 @@ const Home = () => {
 	}, []);
 
 	const handleLoad = async () => {
-		const postsData = await getPosts(jwt);
+		try {
+			const postsData = await getPosts(jwt);
 
-		setPosts(
-			postsData.data.map((post: any) => {
-				return {
-					id: post.id,
-					caption: post.attributes.caption,
-					image_id: post.attributes.image_id,
-					user_id: post.attributes.user_id,
-				};
-			})
-		);
-		setTotalPosts(postsData.meta.pagination.total);
-		setLoading(false);
+			setPosts(
+				postsData.data.map((post: any) => {
+					return {
+						id: post.id,
+						caption: post.attributes.caption,
+						image_id: post.attributes.image_id,
+						user_id: post.attributes.user_id,
+					};
+				})
+			);
+			setTotalPosts(postsData.meta.pagination.total);
+			setLoading(false);
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 
 	const loadMorePosts = async () => {
-		const postsData = await getPosts(jwt, posts.length);
+		try {
+			const postsData = await getPosts(jwt, posts.length);
 
-		setPosts([
-			...posts,
-			...postsData.data.map((post: any) => {
-				return {
-					id: post.id,
-					caption: post.attributes.caption,
-					image_id: post.attributes.image_id,
-					user_id: post.attributes.user_id,
-				};
-			}),
-		]);
+			setPosts([
+				...posts,
+				...postsData.data.map((post: any) => {
+					return {
+						id: post.id,
+						caption: post.attributes.caption,
+						image_id: post.attributes.image_id,
+						user_id: post.attributes.user_id,
+					};
+				}),
+			]);
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 
 	return (

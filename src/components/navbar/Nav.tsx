@@ -1,6 +1,7 @@
-import React, { FC, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
+import styled from "styled-components";
 
 import { getImages } from "~/api";
 import { UserContext, userContextType } from "~/context/UserContext";
@@ -11,22 +12,21 @@ import {
 	SecondaryButton,
 } from "~/index.styled";
 import Modal from "../modal/Modal";
-import styled from "styled-components";
 
 const Nav = () => {
 	const navigate = useNavigate();
 
-	const { jwt, updateJWT, user, updateUser } = useContext(
+	const { jwt, updateJWT, user, updateUser, updateNotification } = useContext(
 		UserContext
 	) as userContextType;
 
+	const [isShowModal, setShowModal] = useState<boolean>(false);
+
 	const handleLogout = () => {
 		updateJWT("");
-
+		updateUser({});
 		navigate("/");
 	};
-
-	const [isShowModal, setShowModal] = useState<boolean>(false);
 
 	const closeModal = (value: boolean) => {
 		setShowModal(value);
@@ -37,9 +37,13 @@ const Nav = () => {
 	}, []);
 
 	const handleLoad = async () => {
-		const image = await getImages(jwt, user.user_image_id.toString());
+		try {
+			const image = await getImages(jwt, user.user_image_id.toString());
 
-		updateUser({ ...user, imageUrl: image.url });
+			updateUser({ ...user, imageUrl: image.url });
+		} catch (e) {
+			updateNotification("Error occured while loading user data", "#FF6464");
+		}
 	};
 	return (
 		<motion.div

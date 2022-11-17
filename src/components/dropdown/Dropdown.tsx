@@ -1,5 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from "react";
-import { UserContext, userContextType } from "~/context/UserContext";
+import { FC, useState } from "react";
 
 const labels = [{ label: "Delete", action: "delete" }];
 
@@ -9,8 +8,6 @@ interface PropTypes {
 }
 
 const Dropdown: FC<PropTypes> = ({ id, handleDelete }) => {
-	const { jwt } = useContext(UserContext) as userContextType;
-
 	const [isOpen, setOpen] = useState(false);
 
 	const handleAction = async (action: string) => {

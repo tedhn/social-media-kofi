@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useId, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 
 import { addToFavourite, getFavouriteId, removeFromFavourite } from "~/api";
 import { UserContext, userContextType } from "~/context/UserContext";

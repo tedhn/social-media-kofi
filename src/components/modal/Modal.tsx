@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 
 import { createPost, updateUserImage, uploadImage } from "~/api";
 import { UserContext, userContextType } from "~/context/UserContext";
+import axios from "axios";
 
 interface PropTypes {
 	render: (
@@ -18,7 +19,7 @@ interface PropTypes {
 }
 
 const Modal: FC<PropTypes> = ({ render, closeModal }) => {
-	const { jwt, user, updateNotification } = useContext(
+	const { jwt, user, updateNotification, updateUser } = useContext(
 		UserContext
 	) as userContextType;
 
@@ -29,26 +30,34 @@ const Modal: FC<PropTypes> = ({ render, closeModal }) => {
 	const handleCreatePost = async () => {
 		setLoading(true);
 
-		const { data } = await uploadImage(jwt, image!);
+		try {
+			const { data } = await uploadImage(jwt, image!);
 
-		createPost(jwt, caption, data[0].id, user.id);
+			createPost(jwt, caption, data[0].id, user.id);
 
-		closeModal(false);
-		setLoading(false);
+			closeModal(false);
+			setLoading(false);
 
-		updateNotification("Post created!", "#B3FFAE");
+			updateNotification("Post created!", "#B3FFAE");
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 	const handleUpdateUserImage = async () => {
 		setLoading(true);
 
-		const { data } = await uploadImage(jwt, image!);
+		try {
+			const { data } = await uploadImage(jwt, image!);
 
-		updateUserImage(jwt, data[0].id, user.id);
+			await updateUserImage(jwt, data[0].id, user.id);
 
-		closeModal(false);
-		setLoading(false);
+			closeModal(false);
+			setLoading(false);
 
-		updateNotification("Profile Picture Updated!", "#B3FFAE");
+			updateNotification("Profile Picture Updated!", "#B3FFAE");
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 
 	return (

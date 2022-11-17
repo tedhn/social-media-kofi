@@ -1,13 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { motion } from "framer-motion";
-import { deletePost, getUser, getUserPosts } from "~/api";
+import { useNavigate } from "react-router-dom";
+
+import { deletePost, getUserPosts } from "~/api";
 import { UserContext, userContextType } from "~/context/UserContext";
 import { LoadingDiv, PageContainer } from "~/index.styled";
-import { responseType } from "../favourite/Favourite";
+import { responseType } from "~/index.types";
 import { Card } from "~/components";
 
 const Profile = () => {
+	const navigate = useNavigate();
 	const { jwt, user, updateNotification } = useContext(
 		UserContext
 	) as userContextType;
@@ -17,21 +20,33 @@ const Profile = () => {
 	const [totalPosts, setTotalPosts] = useState(0);
 
 	useEffect(() => {
-		handleLoad();
+		if (jwt !== "") {
+			handleLoad();
+		} else {
+			navigate("/");
+		}
 	}, []);
 
 	const handleLoad = async () => {
-		const res = await getUserPosts(jwt, user.id);
+		try {
+			const res = await getUserPosts(jwt, user.id);
 
-		setPosts(res.data);
-		setTotalPosts(res.meta.pagination.total);
-		setLoading(false);
+			setPosts(res.data);
+			setTotalPosts(res.meta.pagination.total);
+			setLoading(false);
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 
 	const loadMorePosts = async () => {
-		const res = await getUserPosts(jwt, user.id, posts.length);
+		try {
+			const res = await getUserPosts(jwt, user.id, posts.length);
 
-		setPosts([...posts, ...res.data]);
+			setPosts([...posts, ...res.data]);
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 
 	const handleDelete = async (id: number) => {

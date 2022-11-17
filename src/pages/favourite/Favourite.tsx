@@ -1,21 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router-dom";
-import { findUserFavourites, getPosts, getSpecificPost } from "~/api";
 import { motion } from "framer-motion";
+
+import { findUserFavourites, getSpecificPost } from "~/api";
 import { Card } from "~/components";
 import { UserContext, userContextType } from "~/context/UserContext";
 import { LoadingDiv, PageContainer } from "~/index.styled";
-import { PostType } from "../home/Home";
-
-export interface responseType {
-	attributes: PostType;
-	id: number;
-}
+import { responseType } from "~/index.types";
 
 const Favourite = () => {
 	const navigate = useNavigate();
-	const { jwt, user } = useContext(UserContext) as userContextType;
+	const { jwt, user, updateNotification } = useContext(
+		UserContext
+	) as userContextType;
 	const [posts, setPosts] = useState<Array<responseType>>([]);
 	const [isLoading, setLoading] = useState(true);
 	const [totalPosts, setTotalPosts] = useState(0);
@@ -29,34 +27,42 @@ const Favourite = () => {
 	}, []);
 
 	const handleLoad = async () => {
-		const res = await findUserFavourites(jwt, user.id);
+		try {
+			const res = await findUserFavourites(jwt, user.id);
 
-		const postArr = await Promise.all(
-			res.data.map(async (item: any) => {
-				const { data } = await getSpecificPost(jwt, item.attributes.post_id);
+			const postArr = await Promise.all(
+				res.data.map(async (item: any) => {
+					const { data } = await getSpecificPost(jwt, item.attributes.post_id);
 
-				return data;
-			})
-		);
+					return data;
+				})
+			);
 
-		setPosts(postArr);
+			setPosts(postArr);
 
-		setTotalPosts(res.meta.pagination.total);
-		setLoading(false);
+			setTotalPosts(res.meta.pagination.total);
+			setLoading(false);
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 
 	const loadMorePosts = async () => {
-		const res = await findUserFavourites(jwt, user.id, posts.length);
+		try {
+			const res = await findUserFavourites(jwt, user.id, posts.length);
 
-		const postArr = await Promise.all(
-			res.data.map(async (item: any) => {
-				const { data } = await getSpecificPost(jwt, item.attributes.post_id);
+			const postArr = await Promise.all(
+				res.data.map(async (item: any) => {
+					const { data } = await getSpecificPost(jwt, item.attributes.post_id);
 
-				return data;
-			})
-		);
+					return data;
+				})
+			);
 
-		setPosts([...posts, ...postArr]);
+			setPosts([...posts, ...postArr]);
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 
 	return (

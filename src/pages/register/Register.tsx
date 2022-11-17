@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 import Image from "~/assets/login.gif";
 import { InputBox, PrimaryButton, SecondaryButton } from "~/index.styled";
@@ -16,7 +17,8 @@ interface UserType {
 const Login = () => {
 	const navigate = useNavigate();
 
-	const { updateJWT, updateUser } = useContext(UserContext) as userContextType;
+	const { updateJWT, updateUser, updateNotification, notification } =
+		useContext(UserContext) as userContextType;
 
 	const [user, setUser] = useState<UserType>({
 		email: "",
@@ -67,11 +69,11 @@ const Login = () => {
 			} catch (e) {
 				// change this to toast notification
 
-				console.log(e);
+				updateNotification("Invalid Credentials", "#FF6464");
 			}
 		} else {
 			// change this to toast notification
-			console.log("password must be 6 characters long");
+			updateNotification("Invalid Credentials", "#FF6464");
 		}
 	};
 
@@ -90,7 +92,12 @@ const Login = () => {
 	};
 
 	return (
-		<div className='flex flex-col items-center justify-center h-screen col-start-5 col-end-9 gap-4'>
+		<motion.div
+			initial={{ opacity: 0, x: 50 }}
+			animate={{ opacity: 1, x: 0 }}
+			exit={{ opacity: 0, x: 50 }}
+			transition={{ duration: 0.3 }}
+			className='flex flex-col items-center justify-center h-screen col-start-5 col-end-9 gap-4'>
 			<img src={Image} alt='404' className='w-44' />
 			<h1 className='text-5xl font-bold text-center'>Kofi</h1>
 
@@ -135,7 +142,7 @@ const Login = () => {
 				</SecondaryButton>
 				<PrimaryButton onClick={handleRegister}>Register</PrimaryButton>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

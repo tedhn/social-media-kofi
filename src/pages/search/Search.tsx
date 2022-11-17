@@ -1,16 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useLocation, useNavigate, redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+
 import { searchPost } from "~/api";
 import { Card } from "~/components";
 import { UserContext, userContextType } from "~/context/UserContext";
 import { InputBox, LoadingDiv, PageContainer } from "~/index.styled";
-import { responseType } from "../favourite/Favourite";
+import { responseType } from "~/index.types";
 
 const Search = () => {
 	const navigate = useNavigate();
-	const { jwt } = useContext(UserContext) as userContextType;
+	const { jwt, updateNotification } = useContext(
+		UserContext
+	) as userContextType;
 
 	const [query, setQuery] = useState("");
 	const [isLoading, setLoading] = useState(true);
@@ -20,11 +23,15 @@ const Search = () => {
 
 	useEffect(() => {
 		const debounce = setTimeout(async () => {
-			const res = await searchPost(jwt, query);
+			try {
+				const res = await searchPost(jwt, query);
 
-			setSearchResults(res.data);
-			setTotalPosts(res.meta.pagination.total);
-			setLoading(false);
+				setSearchResults(res.data);
+				setTotalPosts(res.meta.pagination.total);
+				setLoading(false);
+			} catch (e) {
+				updateNotification("Error occured while loading posts", "#FF6464");
+			}
 		}, 1000);
 
 		return () => clearTimeout(debounce);
@@ -37,8 +44,12 @@ const Search = () => {
 	}, []);
 
 	const searchMorePosts = async () => {
-		const res = await searchPost(jwt, query, searchResults.length);
-		setSearchResults([...searchResults, ...res.data]);
+		try {
+			const res = await searchPost(jwt, query, searchResults.length);
+			setSearchResults([...searchResults, ...res.data]);
+		} catch (e) {
+			updateNotification("Error occured while loading posts", "#FF6464");
+		}
 	};
 
 	return (

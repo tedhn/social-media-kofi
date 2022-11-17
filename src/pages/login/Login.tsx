@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 import Image from "~/assets/login.gif";
 import { InputBox, PrimaryButton, SecondaryButton } from "~/index.styled";
@@ -9,11 +10,16 @@ import { UserContext, userContextType } from "~/context/UserContext";
 const Login = () => {
 	const navigate = useNavigate();
 
-	const { updateJWT, updateUser } = useContext(UserContext) as userContextType;
+	const { updateJWT, updateUser, updateNotification } = useContext(
+		UserContext
+	) as userContextType;
 
 	const [loginInfo, setLoginInfo] = useState({ email: "", password: "" });
+	const [isDisabledButton, setDisabledButton] = useState(false);
 
 	const handleLogin = async () => {
+		setDisabledButton(true);
+
 		try {
 			const res = await axios.post("http://localhost:1336/api/auth/local", {
 				identifier: loginInfo.email,
@@ -23,10 +29,11 @@ const Login = () => {
 			updateJWT(res.data.jwt);
 			updateUser(res.data.user);
 
+			setDisabledButton(false);
 			navigate("/home");
 		} catch (e) {
-			//change thsi to toast notification
-			console.log(e);
+			setDisabledButton(false);
+			updateNotification("Invalid Credentials", "#FF6464");
 		}
 	};
 
@@ -35,7 +42,12 @@ const Login = () => {
 	};
 
 	return (
-		<div className='h-screen flex flex-col items-center justify-center col-start-5 col-end-9 gap-4'>
+		<motion.div
+			initial={{ opacity: 0, x: -50 }}
+			animate={{ opacity: 1, x: 0 }}
+			exit={{ opacity: 0, x: -50 }}
+			transition={{ duration: 0.3 }}
+			className='h-screen flex flex-col items-center justify-center col-start-5 col-end-9 gap-4'>
 			<img src={Image} alt='404' className='w-44' />
 			<h1 className='text-5xl font-bold text-center'>Kofi</h1>
 
@@ -62,9 +74,11 @@ const Login = () => {
 				<SecondaryButton onClick={() => navigate("/register")}>
 					Register
 				</SecondaryButton>
-				<PrimaryButton onClick={handleLogin}>Login</PrimaryButton>
+				<PrimaryButton onClick={handleLogin} disabled={isDisabledButton}>
+					Login
+				</PrimaryButton>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 
