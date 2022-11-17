@@ -7,6 +7,7 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+	base: "/social-media-kofi/",
 	resolve: {
 		alias: {
 			"~": path.resolve(__dirname, "src"),
