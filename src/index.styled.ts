@@ -53,3 +53,11 @@ export const PageContainer = styled(motion.div)`
 export const ShadowDiv = styled.div`
 	box-shadow: 3px 3px 3px 3px rgba(135, 133, 162, 0.25);
 `;
+
+export const LoadingDiv = styled.div`
+	width: 100%;
+	margin: auto;
+	text-align: center;
+	padding: 4rem 0;
+	font-weight: 700;
+`;

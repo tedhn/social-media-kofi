@@ -1,35 +1,45 @@
 import React, { useContext, useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useLocation, useNavigate, redirect } from "react-router-dom";
+import { motion } from "framer-motion";
 import { searchPost } from "~/api";
 import { Card } from "~/components";
 import { UserContext, userContextType } from "~/context/UserContext";
-import { InputBox, PageContainer } from "~/index.styled";
+import { InputBox, LoadingDiv, PageContainer } from "~/index.styled";
 import { responseType } from "../favourite/Favourite";
 
 const Search = () => {
-	const location = useLocation();
 	const navigate = useNavigate();
 	const { jwt } = useContext(UserContext) as userContextType;
 
 	const [query, setQuery] = useState("");
+	const [isLoading, setLoading] = useState(true);
+	const [totalPosts, setTotalPosts] = useState(0);
+
 	const [searchResults, setSearchResults] = useState<Array<responseType>>([]);
 
 	useEffect(() => {
 		const debounce = setTimeout(async () => {
 			const res = await searchPost(jwt, query);
 
-			setSearchResults(res);
+			setSearchResults(res.data);
+			setTotalPosts(res.meta.pagination.total);
+			setLoading(false);
 		}, 1000);
 
 		return () => clearTimeout(debounce);
 	}, [query]);
 
 	useEffect(() => {
-		console.log(location);
 		if (jwt === "") {
 			navigate("/");
 		}
 	}, []);
+
+	const searchMorePosts = async () => {
+		const res = await searchPost(jwt, query, searchResults.length);
+		setSearchResults([...searchResults, ...res.data]);
+	};
 
 	return (
 		<PageContainer
@@ -46,17 +56,37 @@ const Search = () => {
 				}
 			/>
 
-			{searchResults.length === 0 ? (
+			{isLoading ? (
+				<LoadingDiv> Loading posts</LoadingDiv>
+			) : (
+				<InfiniteScroll
+					dataLength={searchResults.length}
+					next={searchMorePosts}
+					hasMore={searchResults.length < totalPosts}
+					loader={<LoadingDiv>Loading posts</LoadingDiv>}
+					endMessage={<LoadingDiv> End of favourites</LoadingDiv>}>
+					<motion.div
+						initial={{ opacity: 0, y: -50 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.3 }}
+						className='flex flex-wrap gap-12 justify-evenly '>
+						{searchResults.map((post) => {
+							return (
+								<Card
+									key={post.id}
+									post={{ ...post.attributes, id: post.id }}
+								/>
+							);
+						})}
+					</motion.div>
+				</InfiniteScroll>
+			)}
+
+			{/* {searchResults.length === 0 ? (
 				<div className='text-center font-bold text-2xl'>No posts found </div>
 			) : (
-				<div className='flex flex-wrap gap-12 justify-evenly '>
-					{searchResults.map((post) => {
-						return (
-							<Card key={post.id} post={{ ...post.attributes, id: post.id }} />
-						);
-					})}
-				</div>
-			)}
+				<div className='flex flex-wrap gap-12 justify-evenly '></div>
+			)} */}
 		</PageContainer>
 	);
 };

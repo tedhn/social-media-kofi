@@ -23,7 +23,7 @@ function App() {
 		<div className=' grid grid-cols-12 bg-brown/20'>
 			{jwt && <Nav />}
 
-			<AnimatePresence exitBeforeEnter>
+			<AnimatePresence mode='wait'>
 				<Routes key={location.pathname} location={location}>
 					<Route path='' element={<Login />} />
 					<Route path='login' element={<Login />} />
@@ -44,7 +44,6 @@ function App() {
 }
 
 // TODO NOTIFICATIONS
-// TODO LOADING
 // TODO Profile Page
 // TODO Animation
 // TODO Nav Bar Collaspe

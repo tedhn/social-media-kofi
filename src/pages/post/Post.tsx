@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { PageContainer, ShadowDiv } from "~/index.styled";
 import { UserContext, userContextType } from "~/context/UserContext";
 import { useNavigate, useParams } from "react-router-dom";
-import { getImages, getPosts, getUser } from "~/api";
+import { getImages, getPosts, getSpecificPost, getUser } from "~/api";
 import Heart from "~/components/heart/Heart";
 
 const Post = () => {
@@ -29,7 +29,7 @@ const Post = () => {
 	}, []);
 
 	const handleLoad = async () => {
-		const postData = await getPosts(jwt, params.id);
+		const postData = await getSpecificPost(jwt, params.id);
 
 		const postImage = await getImages(
 			jwt,

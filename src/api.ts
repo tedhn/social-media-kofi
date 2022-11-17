@@ -23,7 +23,20 @@ export const getUser = async (jwt: string, id: string = "") => {
 	return data;
 };
 
-export const getPosts = async (jwt: string, id: string = "") => {
+export const getPosts = async (jwt: string, offset: number = 0) => {
+	const { data } = await axios.get(
+		`http://localhost:1336/api/posts?pagination[start]=${offset}`,
+		{
+			headers: {
+				Authorization: `Bearer ${jwt}`,
+			},
+		}
+	);
+
+	return data;
+};
+
+export const getSpecificPost = async (jwt: string, id: string = "") => {
 	const { data } = await axios.get(`http://localhost:1336/api/posts/${id}`, {
 		headers: {
 			Authorization: `Bearer ${jwt}`,
@@ -107,25 +120,8 @@ export const getFavouriteId = async (
 	postId: number,
 	userId: number
 ) => {
-	const { data } = await axios.get("http://localhost:1336/api/favourites", {
-		headers: {
-			Authorization: `Bearer ${jwt}`,
-		},
-	});
-
-	return data.data.filter((item: any) => {
-		if (
-			item.attributes.post_id === postId &&
-			item.attributes.user_id === userId
-		) {
-			return item.id;
-		}
-	});
-};
-
-export const findUserFavourites = async (jwt: string, userId: number) => {
 	const { data } = await axios.get(
-		`http://localhost:1336/api/favourites?filters[user_id][$eq]=${userId}`,
+		`http://localhost:1336/api/favourites?filters[post_id][$eq]=${postId}&filters[user_id][$eq]=${userId}`,
 		{
 			headers: {
 				Authorization: `Bearer ${jwt}`,
@@ -134,6 +130,23 @@ export const findUserFavourites = async (jwt: string, userId: number) => {
 	);
 
 	return data.data;
+};
+
+export const findUserFavourites = async (
+	jwt: string,
+	userId: number,
+	offset: number = 0
+) => {
+	const { data } = await axios.get(
+		`http://localhost:1336/api/favourites?pagination[start]=${offset}&pagination[withCount]=true&filters[user_id][$eq]=${userId}`,
+		{
+			headers: {
+				Authorization: `Bearer ${jwt}`,
+			},
+		}
+	);
+
+	return data;
 };
 
 export const updateUserImage = async (
@@ -158,14 +171,18 @@ export const updateUserImage = async (
 	}
 };
 
-export const searchPost = async (jwt: string, query: string) => {
+export const searchPost = async (
+	jwt: string,
+	query: string,
+	offset: number = 0
+) => {
 	const { data } = await axios.get(
-		`http://localhost:1336/api/posts?filters[caption][$containsi]=${query}`,
+		`http://localhost:1336/api/posts?filters[caption][$containsi]=${query}&pagination[start]=${offset}`,
 		{
 			headers: {
 				Authorization: `Bearer ${jwt}`,
 			},
 		}
 	);
-	return data.data;
+	return data;
 };

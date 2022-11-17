@@ -11,7 +11,8 @@ interface PropTypes {
 		setImage: React.Dispatch<React.SetStateAction<File | undefined>>,
 		setCaption: React.Dispatch<React.SetStateAction<string>>,
 		handleCreatePost: () => void,
-		handleUpdateUserImage: () => void
+		handleUpdateUserImage: () => void,
+		isLoading: boolean
 	) => React.ReactNode;
 	closeModal: (value: boolean) => void;
 }
@@ -20,24 +21,29 @@ const Modal: FC<PropTypes> = ({ render, closeModal }) => {
 	const { jwt, user } = useContext(UserContext) as userContextType;
 
 	const [image, setImage] = useState<File>();
+	const [isLoading, setLoading] = useState(false);
 	const [caption, setCaption] = useState<string>("");
 
 	const handleCreatePost = async () => {
+		setLoading(true);
+
 		const { data } = await uploadImage(jwt, image!);
 
 		createPost(jwt, caption, data[0].id, user.id);
 
 		closeModal(false);
-
+		setLoading(false);
 		// add success notification
 	};
 	const handleUpdateUserImage = async () => {
+		setLoading(true);
+
 		const { data } = await uploadImage(jwt, image!);
 
 		updateUserImage(jwt, data[0].id, user.id);
 
 		closeModal(false);
-
+		setLoading(false);
 		// add success notification
 	};
 
@@ -56,7 +62,8 @@ const Modal: FC<PropTypes> = ({ render, closeModal }) => {
 						setImage,
 						setCaption,
 						handleCreatePost,
-						handleUpdateUserImage
+						handleUpdateUserImage,
+						isLoading
 					)}
 				</motion.div>
 			</div>
