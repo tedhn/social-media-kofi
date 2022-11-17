@@ -8,7 +8,9 @@ import { responseType } from "../favourite/Favourite";
 import { Card } from "~/components";
 
 const Profile = () => {
-	const { jwt, user } = useContext(UserContext) as userContextType;
+	const { jwt, user, updateNotification } = useContext(
+		UserContext
+	) as userContextType;
 
 	const [posts, setPosts] = useState<any>([]);
 	const [isLoading, setLoading] = useState(true);
@@ -36,8 +38,9 @@ const Profile = () => {
 		await deletePost(jwt, id);
 		setTotalPosts(totalPosts - 1);
 		setPosts(posts.filter((post: any) => post.id !== id));
+
+		updateNotification("Post Deleted!", "#B3FFAE");
 	};
-	const handleEdit = async () => {};
 
 	return (
 		<PageContainer

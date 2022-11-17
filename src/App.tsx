@@ -14,14 +14,20 @@ import {
 } from "./pages";
 import { Nav } from "./components";
 import { UserContext, userContextType } from "./context/UserContext";
+import { NotificationDiv } from "./index.styled";
 
 function App() {
 	const location = useLocation();
-	const { jwt } = useContext(UserContext) as userContextType;
+	const { jwt, notification } = useContext(UserContext) as userContextType;
 
 	return (
 		<div className=' grid grid-cols-12 bg-brown/20'>
 			{jwt && <Nav />}
+			{notification.isShow && (
+				<NotificationDiv bgColor={notification.bgColor}>
+					{notification.label}
+				</NotificationDiv>
+			)}
 
 			<AnimatePresence mode='wait'>
 				<Routes key={location.pathname} location={location}>

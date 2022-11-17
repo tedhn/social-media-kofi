@@ -14,13 +14,10 @@ const Dropdown: FC<PropTypes> = ({ id, handleDelete }) => {
 	const [isOpen, setOpen] = useState(false);
 
 	const handleAction = async (action: string) => {
-		console.log(action + id);
-
 		switch (action) {
 			case "delete": {
-				await handleDelete(id);
+				handleDelete(id);
 			}
-
 			default: {
 				return;
 			}

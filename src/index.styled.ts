@@ -61,3 +61,15 @@ export const LoadingDiv = styled.div`
 	padding: 4rem 0;
 	font-weight: 700;
 `;
+
+export const NotificationDiv = styled.div`
+	position: absolute;
+	border-radius: 12px;
+	width: 300px;
+	bottom: 2%;
+	right: 2%;
+	padding: 1rem 2rem;
+	font-weight: 500;
+
+	background-color: ${(props: { bgColor: string }) => props.bgColor};
+`;

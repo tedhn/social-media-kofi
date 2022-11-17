@@ -18,7 +18,9 @@ interface PropTypes {
 }
 
 const Modal: FC<PropTypes> = ({ render, closeModal }) => {
-	const { jwt, user } = useContext(UserContext) as userContextType;
+	const { jwt, user, updateNotification } = useContext(
+		UserContext
+	) as userContextType;
 
 	const [image, setImage] = useState<File>();
 	const [isLoading, setLoading] = useState(false);
@@ -33,7 +35,8 @@ const Modal: FC<PropTypes> = ({ render, closeModal }) => {
 
 		closeModal(false);
 		setLoading(false);
-		// add success notification
+
+		updateNotification("Post created!", "#B3FFAE");
 	};
 	const handleUpdateUserImage = async () => {
 		setLoading(true);
@@ -44,11 +47,12 @@ const Modal: FC<PropTypes> = ({ render, closeModal }) => {
 
 		closeModal(false);
 		setLoading(false);
-		// add success notification
+
+		updateNotification("Profile Picture Updated!", "#B3FFAE");
 	};
 
 	return (
-		<div className='fixed w-full h-full bg-black/50 top-0 left-0 overflow-hidden'>
+		<div className='fixed z-20 w-full h-full bg-black/50 top-0 left-0 overflow-hidden'>
 			<div className='relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2'>
 				<motion.div
 					initial={{ opacity: 0, y: -500 }}

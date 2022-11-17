@@ -7,6 +7,8 @@ export interface userContextType {
 	user: any;
 	updateJWT: (jwt: string) => void;
 	updateUser: (user: any) => void;
+	updateNotification: (label: string, bgColor: string) => void;
+	notification: { label: string; bgColor: string; isShow: boolean };
 }
 
 interface propTypes {
@@ -20,15 +22,26 @@ const UserContextProvider: FC<propTypes> = ({ children }) => {
 	const [user, setUser] = useState("");
 	const [isLoggedIn, setLoggedIn] = useState(true);
 
-	const [posts, setPosts] = useState<any>([]);
+	const [notification, setNotification] = useState({
+		label: "",
+		bgColor: "",
+		isShow: false,
+	});
 
 	const updateJWT = (jwt: string) => {
-		console.log(jwt);
 		setJWT(jwt);
 	};
 
 	const updateUser = (user: any) => {
 		setUser(user);
+	};
+
+	const updateNotification = (label: string, bgColor: string) => {
+		setNotification({ label, bgColor, isShow: true });
+
+		setTimeout(() => {
+			setNotification({ ...notification, isShow: false });
+		}, 3000);
 	};
 
 	return (
@@ -39,6 +52,8 @@ const UserContextProvider: FC<propTypes> = ({ children }) => {
 				user,
 				updateJWT,
 				updateUser,
+				updateNotification,
+				notification,
 			}}>
 			{children}
 		</UserContext.Provider>
