@@ -8,12 +8,15 @@ import { getImages, getUser } from "~/api";
 import Heart from "../heart/Heart";
 import { useNavigate } from "react-router-dom";
 import { LoadingDiv } from "~/index.styled";
+import Dropdown from "../dropdown/Dropdown";
 
 interface PropTypes {
 	post: PostType;
+	isMe?: boolean;
+	handleDelete?: (id: number) => void;
 }
 
-const Card: FC<PropTypes> = ({ post }) => {
+const Card: FC<PropTypes> = ({ post, isMe = false, handleDelete }) => {
 	const navigate = useNavigate();
 
 	const { jwt, user } = useContext(UserContext) as userContextType;
@@ -32,8 +35,10 @@ const Card: FC<PropTypes> = ({ post }) => {
 	}, []);
 
 	const handleLoad = async () => {
-		const postImage = await getImages(jwt, post.image_id.toString());
-		const user = await getUser(jwt, post.user_id.toString());
+		const [postImage, user] = await Promise.all([
+			getImages(jwt, post.image_id.toString()),
+			getUser(jwt, post.user_id.toString()),
+		]);
 
 		const userImage = await getImages(jwt, user.user_image_id.toString());
 
@@ -52,7 +57,7 @@ const Card: FC<PropTypes> = ({ post }) => {
 				<LoadingDiv>Loading Post</LoadingDiv>
 			) : (
 				<>
-					<div className='px-2 py-3'>
+					<div className='flex justify-between px-2 py-3'>
 						<div className='flex items-center gap-1'>
 							<div className='w-8 h-8'>
 								<img
@@ -63,6 +68,8 @@ const Card: FC<PropTypes> = ({ post }) => {
 							</div>
 							<div className='text-sm '>{data.username}</div>
 						</div>
+
+						{isMe && <Dropdown id={post.id} handleDelete={handleDelete!} />}
 					</div>
 
 					<div
@@ -77,19 +84,6 @@ const Card: FC<PropTypes> = ({ post }) => {
 
 					<div className='flex gap-2 px-2 py-3'>
 						<Heart postId={post.id} userId={user.id} />
-						{/* <svg
-					xmlns='http://www.w3.org/2000/svg'
-					fill='none'
-					viewBox='0 0 24 24'
-					strokeWidth={1.5}
-					stroke='currentColor'
-					className='w-6 h-6 hover:cursor-pointer'>
-					<path
-						strokeLinecap='round'
-						strokeLinejoin='round'
-						d='M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z'
-					/>
-				</svg> */}
 					</div>
 					<div className='px-2 pb-3 text-sm '>{data.caption}</div>
 				</>

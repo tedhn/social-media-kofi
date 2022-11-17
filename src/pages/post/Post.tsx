@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import styled from "styled-components";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { PageContainer, ShadowDiv } from "~/index.styled";
 import { UserContext, userContextType } from "~/context/UserContext";
-import { useNavigate, useParams } from "react-router-dom";
-import { getImages, getPosts, getSpecificPost, getUser } from "~/api";
-import Heart from "~/components/heart/Heart";
+import { deletePost, getImages, getSpecificPost, getUser } from "~/api";
+import { Dropdown, Heart } from "~/components";
 
 const Post = () => {
 	const navigate = useNavigate();
@@ -13,12 +12,20 @@ const Post = () => {
 
 	const { jwt, user } = useContext(UserContext) as userContextType;
 	const [post, setPost] = useState<{
-		id: number | null;
+		id: number;
+		user_id: number;
 		username: string;
 		userImageUrl: string;
 		image_url: string;
 		caption: string;
-	}>({ id: null, username: "", userImageUrl: "", image_url: "", caption: "" });
+	}>({
+		id: 0,
+		user_id: 0,
+		username: "",
+		userImageUrl: "",
+		image_url: "",
+		caption: "",
+	});
 
 	useEffect(() => {
 		if (jwt !== "") {
@@ -44,11 +51,17 @@ const Post = () => {
 
 		setPost({
 			id: postData.data.id,
+			user_id: userData.id,
 			username: userData.username,
 			userImageUrl: userImage.url,
 			image_url: postImage.url,
 			caption: postData.data.attributes.caption,
 		});
+	};
+
+	const handleDelete = async (id: number) => {
+		await deletePost(jwt, id);
+		navigate("/home");
 	};
 
 	return (
@@ -64,7 +77,7 @@ const Post = () => {
 			</div>
 
 			<div className='w-1/2 mx-auto'>
-				<div className=' pb-4'>
+				<div className='flex items-center justify-between pb-4'>
 					<div className='flex items-center gap-1 self-start'>
 						<div className='w-8 h-8'>
 							<img
@@ -75,6 +88,9 @@ const Post = () => {
 						</div>
 						<div className='font-medium'>{post.username}</div>
 					</div>
+					{post.user_id === user.id && (
+						<Dropdown id={post.id} handleDelete={handleDelete!} />
+					)}
 				</div>
 				<ShadowDiv className='w-full    rounded-md overflow-hidden mb-3'>
 					<img

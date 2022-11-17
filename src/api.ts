@@ -186,3 +186,28 @@ export const searchPost = async (
 	);
 	return data;
 };
+
+export const getUserPosts = async (
+	jwt: string,
+	id: number,
+	offset: number = 0
+) => {
+	const { data } = await axios.get(
+		`http://localhost:1336/api/posts?filters[user_id][$eq]=${id}&pagination[start]=${offset}`,
+		{
+			headers: {
+				Authorization: `Bearer ${jwt}`,
+			},
+		}
+	);
+
+	return data;
+};
+
+export const deletePost = async (jwt: string, id: number) => {
+	await axios.delete(`http://localhost:1336/api/posts/${id}`, {
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	});
+};

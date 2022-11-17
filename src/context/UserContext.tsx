@@ -1,4 +1,5 @@
 import React, { createContext, FC, useState } from "react";
+import { deletePost } from "~/api";
 
 export interface userContextType {
 	isLoggedIn: boolean;
@@ -19,19 +20,26 @@ const UserContextProvider: FC<propTypes> = ({ children }) => {
 	const [user, setUser] = useState("");
 	const [isLoggedIn, setLoggedIn] = useState(true);
 
+	const [posts, setPosts] = useState<any>([]);
+
 	const updateJWT = (jwt: string) => {
 		console.log(jwt);
 		setJWT(jwt);
 	};
 
 	const updateUser = (user: any) => {
-
 		setUser(user);
 	};
 
 	return (
 		<UserContext.Provider
-			value={{ isLoggedIn, jwt, user, updateJWT, updateUser }}>
+			value={{
+				isLoggedIn,
+				jwt,
+				user,
+				updateJWT,
+				updateUser,
+			}}>
 			{children}
 		</UserContext.Provider>
 	);

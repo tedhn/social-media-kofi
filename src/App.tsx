@@ -44,8 +44,6 @@ function App() {
 }
 
 // TODO NOTIFICATIONS
-// TODO Profile Page
 // TODO Animation
-// TODO Nav Bar Collaspe
 
 export default App;
