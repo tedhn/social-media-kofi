@@ -21,7 +21,7 @@ const Login = () => {
 		setDisabledButton(true);
 
 		try {
-			const res = await axios.post("http://localhost:1336/api/auth/local", {
+			const res = await axios.post("http://127.0.0.1:1336/api/auth/local", {
 				identifier: loginInfo.email,
 				password: loginInfo.password,
 			});
